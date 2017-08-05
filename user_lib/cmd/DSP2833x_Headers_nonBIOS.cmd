@@ -1,25 +1,3 @@
-/*
-//###########################################################################
-//
-// FILE:    DSP2833x_Headers_nonBIOS.cmd
-//
-// TITLE:   DSP2833x Peripheral registers linker command file 
-//
-// DESCRIPTION: 
-// 
-//          This file is for use in Non-BIOS applications.
-//
-//          Linker command file to place the peripheral structures 
-//          used within the DSP2833x headerfiles into the correct memory
-//          mapped locations.
-//
-//          This version of the file includes the PieVectorTable structure.
-//          For BIOS applications, please use the DSP2833x_Headers_BIOS.cmd file
-//          which does not include the PieVectorTable structure.
-//
-//###########################################################################
-*/
-
 MEMORY
 {
  PAGE 0:    /* Program Memory */
