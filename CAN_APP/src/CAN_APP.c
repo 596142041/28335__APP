@@ -29,7 +29,7 @@ Boot_CMD_LIST cmd_list =
 };
 Device_INFO DEVICE_INFO =
 {
-.FW_TYPE = CAN_BL_APP,
+//.FW_TYPE = CAN_BL_APP,
 .FW_Version = 0x0010001,
 };
 void __disable_irq(void)
@@ -87,6 +87,10 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 {
 	u8 i;
 	CanTxMsg TxMessage;//发送对应消息
+	DEVICE_INFO.Device_addr.bits.Device_addr  = DEVICE_ADDR;
+	DEVICE_INFO.Device_addr.bits.reserve = 0x00;
+	DEVICE_INFO.FW_TYPE.bits.FW_type = 0xAAAAAA;
+	DEVICE_INFO.FW_TYPE.bits.Chip_Value = 0xAA;
 	for(i = 0;i <8;i++)
 	{
 		TxMessage.CAN_Tx_msg_data.msg_byte.data[i] = 0x00;
@@ -124,10 +128,10 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[1] = (u8)(DEVICE_INFO.FW_Version>>16);
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[2] = (u8)(DEVICE_INFO.FW_Version>>8);//次版本号，两字节
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[3] = (u8)(DEVICE_INFO.FW_Version>>0);
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[4] = (u8)(DEVICE_INFO.FW_TYPE>>24);
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[5] = (u8)(DEVICE_INFO.FW_TYPE>>16);
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[6] = (u8)(DEVICE_INFO.FW_TYPE>>8);
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[7] = (u8)(DEVICE_INFO.FW_TYPE>>0);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[4] = (u8)(DEVICE_INFO.FW_TYPE.bits.FW_type>>16);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[5] = (u8)(DEVICE_INFO.FW_TYPE.bits.FW_type>>8);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[6] = (u8)(DEVICE_INFO.FW_TYPE.bits.FW_type>>0);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[7] = (u8)(DEVICE_INFO.FW_TYPE.bits.Chip_Value>>0);
 			TxMessage.DLC = 8;
 			CAN_Tx_Msg(&TxMessage);
 		}
