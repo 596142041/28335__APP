@@ -1,5 +1,6 @@
 #include "CAN_APP.h"
 #include "LED.h"
+#include "Flash.h"
 void main(void)
 {
 	InitSysCtrl();
