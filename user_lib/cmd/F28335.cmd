@@ -14,13 +14,14 @@ MEMORY
 	 FLASHH : origin = 0x300000, length = 0x008000
 	 FLASHG : origin = 0x308000, length = 0x008000
 	 --------------------------------------------------------------------------------*/
-	BEGIN  : origin = 0x310000, length = 0x000002
-	FLASHF : origin = 0x310002, length = 0x007FFE
-	FLASHE : origin = 0x318000, length = 0x008000
-	FLASHD : origin = 0x320000, length = 0x008000
-	FLASHC : origin = 0x328000, length = 0x008000
-	FLASHB : origin = 0x330000, length = 0x008000
-	FLASHA : origin = 0x338000, length = 0x007F80
+	APP_INFO : origin = 0x310000, length = 0x000010,fill = 0xFFFF
+	BEGIN    : origin = 0x310010, length = 0x000002
+	FLASHF   : origin = 0x310012, length = 0x007FEE
+	FLASHE   : origin = 0x318000, length = 0x008000
+	FLASHD   : origin = 0x320000, length = 0x008000
+	FLASHC   : origin = 0x328000, length = 0x008000
+	FLASHB   : origin = 0x330000, length = 0x008000
+	FLASHA   : origin = 0x338000, length = 0x007F80
 	/*-----------------------------------------------------------------------------*/
 	CSM_RSVD : origin = 0x33FF80, length = 0x000076 /* Part of FLASHA.  Program with all 0x0000 when CSM is in use. */
 
@@ -81,6 +82,7 @@ SECTIONS
 	.esysmem : > RAMM1 PAGE = 1
 	.econst : > FLASHF PAGE = 0
 	.switch : > FLASHF PAGE = 0
+	APP_info : > APP_INFO  PAGE = 0
 	IQmath : > FLASHF PAGE = 0 /* Math Code */
 	IQmathTables : > IQTABLES, PAGE = 0, TYPE = NOLOAD
 
