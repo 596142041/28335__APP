@@ -20,5 +20,5 @@ void CPU_timer1_init(void)
 __interrupt void CPU_timer1_isr(void)
 {
 	taskclock();
-
+	CpuTimer1Regs.TCR.bit.TIF  = 0x01;//清除中断标志位
 }
