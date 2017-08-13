@@ -41,10 +41,7 @@ MEMORY
 	BOOT_RSVD : origin = 0x000000, length = 0x000050 /* Part of M0, BOOT rom will use this for stack */
 	RAMM0 : origin = 0x000050, length = 0x0003B0 /* on-chip RAM block M0 */
 	RAMM1 : origin = 0x000400, length = 0x000400 /* on-chip RAM block M1 */
-	RAML4 : origin = 0x00C000, length = 0x001000 /* on-chip RAM block L1 */
-	RAML5 : origin = 0x00D000, length = 0x001000 /* on-chip RAM block L1 */
-	RAML6 : origin = 0x00E000, length = 0x001000 /* on-chip RAM block L1 */
-	RAML7 : origin = 0x00F000, length = 0x001000 /* on-chip RAM block L1 */
+	RAML4 : origin = 0x00C000, length = 0x004000 /* on-chip RAM block L1 */
 	ZONE7B : origin = 0x20FC00, length = 0x000400 /* XINTF zone 7 - data space */
 
 }
@@ -88,9 +85,9 @@ SECTIONS
 
 	FPUmathTables : > FPUTABLES, PAGE = 0, TYPE = NOLOAD
 	DMARAML4 : > RAML4, PAGE = 1
-	DMARAML5 : > RAML5, PAGE = 1
-	DMARAML6 : > RAML6, PAGE = 1
-	DMARAML7 : > RAML7, PAGE = 1
+	DMARAML5 : > RAML4, PAGE = 1
+	DMARAML6 : > RAML4, PAGE = 1
+	DMARAML7 : > RAML4, PAGE = 1
 	ZONE7DATA : > ZONE7B, PAGE = 1
 	.reset : > RESET, PAGE = 0, TYPE = DSECT
 	vectors : > VECTORS PAGE = 0, TYPE = DSECT
