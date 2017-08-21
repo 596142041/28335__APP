@@ -90,7 +90,7 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 	DEVICE_INFO.Device_addr.bits.Device_addr  = DEVICE_ADDR;
 	DEVICE_INFO.Device_addr.bits.reserve = 0x00;
 	DEVICE_INFO.FW_TYPE.bits.FW_type = 0xAAAAAA;
-	DEVICE_INFO.FW_TYPE.bits.Chip_Value = 0xAA;
+	DEVICE_INFO.FW_TYPE.bits.Chip_Value = TMS320F28335;
 	for(i = 0;i <8;i++)
 	{
 		TxMessage.CAN_Tx_msg_data.msg_byte.data[i] = 0x00;
@@ -114,7 +114,6 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 		CAN_Tx_Msg(&TxMessage);
 		return;
 	}
-
 	//CMD_List.Check，节点在线检测
 	//节点收到该命令后返回固件版本信息和固件类型，
 	//该命令在Bootloader程序和APP程序都必须实现
@@ -140,13 +139,10 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 	//该命令在Bootloader和APP程序中都必须实现
 	if(can_cmd == cmd_list.Excute)//该命令在DSP中已经实现
 	{
-		exe_type  = (((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[0])&0xFFFFFFFF)<<24)|\
-					(((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[1])&0x00FFFFFF)<<16)|\
-					(((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[2])&0x0000FFFF)<<8)|\
-					(((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[3])&0x000000FF)<<0);
+		exe_type = (((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[0])&0xFFFFFFFF)<<16)|(((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[1])&0x00FFFFFF)<<8)|\(((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[2])&0x0000FFFF)<<0);
 		if(exe_type == CAN_BL_BOOT)
 		{
-			if((*((uint32_t *)Boot__START_ADDR)!=0xFFFFFFFF))
+			if((*((uint32_t*)Boot__START_ADDR)!=0xFFFFFFFF))
 			{
 				CAN_BOOT_JumpToApplication(Boot__START_ADDR);
 			}
