@@ -57,6 +57,7 @@ void main(void)
 	IER |= M_INT13;
 	IER |= M_INT8;
 	IER |= M_INT1;
+
 	EINT;   // Enable Global interrupt INTM
 	ERTM;   // Enable Global realtime interrupt DBGM
 	eMBEnable();
@@ -115,7 +116,7 @@ void Modbus_Data_Init(void)
 	}
 	for (cnt = 0; cnt < REG_HOLDING_NREGS; cnt++)
 	{
-		usRegHoldingBuf[cnt] = cnt * 10;
+		usRegHoldingBuf[cnt] = cnt * 15;
 	}
 	for (cnt = 0; cnt < REG_Discrete_NREG / 8; cnt++)
 	{
