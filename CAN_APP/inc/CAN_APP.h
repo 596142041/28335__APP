@@ -15,10 +15,18 @@
 #include "CANA.h"
 #define APP_START_ADDR   ((uint32_t)0x310000)
 #define Boot__START_ADDR ((uint32_t)0x33FFF6)
-#define CAN_BL_APP      0xAAAAAAAA
-#define CAN_BL_BOOT     0x55555555
+#define CAN_BL_APP      0xAAAAAA
+#define CAN_BL_BOOT     0x555555
 #define DEVICE_ADDR     0x134//设备地址
 #define CMD_WIDTH       4
+#define ADDR_WIDTH 12
+//--------------------------------------------------
+//---以下宏定义是对芯片型号进行宏定义
+#define TMS320F28335      1
+#define TMS320F2808       2
+#define STM32F407IGT6     3
+
+//---------------------------------------------------
 typedef struct _Device_INFO
 {
 	union
