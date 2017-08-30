@@ -108,7 +108,7 @@ void Modbus_Data_Init(void)
 	int cnt;
 	for (cnt = 0; cnt < REG_INPUT_NREGS; cnt++)
 	{
-		usRegInputBuf[cnt] = cnt;
+		usRegInputBuf[cnt] = cnt*10+cnt%5;
 	}
 	for (cnt = 0; cnt < REG_Coils_NREGS / 8; cnt++)
 	{
@@ -116,7 +116,7 @@ void Modbus_Data_Init(void)
 	}
 	for (cnt = 0; cnt < REG_HOLDING_NREGS; cnt++)
 	{
-		usRegHoldingBuf[cnt] = cnt * 15;
+		usRegHoldingBuf[cnt] = cnt * 2;
 	}
 	for (cnt = 0; cnt < REG_Discrete_NREG / 8; cnt++)
 	{
