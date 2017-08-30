@@ -29,8 +29,11 @@ Boot_CMD_LIST cmd_list =
 };
 Device_INFO DEVICE_INFO =
 {
-//.FW_TYPE = CAN_BL_APP,
-.FW_Version = 0x0010001,
+ .FW_Version = 0x0010001,
+ .Device_addr.bits.Device_addr  = DEVICE_ADDR,
+ .Device_addr.bits.reserve = 0x00,
+ .FW_TYPE.bits.FW_type = 0xAAAAAA,
+ .FW_TYPE.bits.Chip_Value = TMS320F28335
 };
 void __disable_irq(void)
 {
@@ -139,7 +142,9 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 	//该命令在Bootloader和APP程序中都必须实现
 	if(can_cmd == cmd_list.Excute)//该命令在DSP中已经实现
 	{
-		exe_type = (((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[0])&0xFFFFFFFF)<<16)|(((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[1])&0x00FFFFFF)<<8)|\(((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[2])&0x0000FFFF)<<0);
+		exe_type = (((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[0])&0xFFFFFFFF)<<0x10)|\
+				   (((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[1])&0x00FFFFFF)<<0x08)|\
+				   (((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[2])&0x0000FFFF)<<0x00);
 		if(exe_type == CAN_BL_BOOT)
 		{
 			if((*((uint32_t*)Boot__START_ADDR)!=0xFFFFFFFF))
