@@ -7,17 +7,16 @@
 #include "CAN_APP.h"
 typedef  void (*pFunction)(void);
 bootloader_data Boot_ID_info;
-u8	   data_temp[128];
-Uint16 write_temp[128];
-u8 can_cmd    = 0x00;//ID的bit0~bit3位为命令码
-u16 can_addr  = 0x00;//ID的bit4~bit15位为节点地址
-u32 start_addr = 0x0000;//每一包数据的起始地址
-u32 data_size=0;//数据包的大小
-u32 data_index=0;//数据指针
-u16 crc_data;
-uint32_t exe_type = 0x00;
+u8  can_cmd       = (u8 )0x00;//ID的bit0~bit3位为命令码
+u16 crc_data      = (u16)0x00;
+u16 can_addr      = (u16)0x00;;//ID的bit4~bit15位为节点地址
+u32 start_addr    = (u32)0x00;//每一包数据的起始地址
+u32 data_size     = (u32)0x00;//数据包的大小
+u32 data_index    = (u32)0x00;//数据指针
+u32 exe_type      = (u32)0x00;
 Boot_CMD_LIST cmd_list =
 {
+	.Read        = 0x0A, //读取flash数据
 	.Erase       = 0x00, //擦除APP区域数据
 	.Write       = 0x02,//以多字节形式写数据
 	.Check       = 0x03,//检测节点是否在线，同时返回固件信息
@@ -29,11 +28,11 @@ Boot_CMD_LIST cmd_list =
 };
 Device_INFO DEVICE_INFO =
 {
- .FW_Version = 0x0010001,
+ .FW_Version                    = 0x0011121,
  .Device_addr.bits.Device_addr  = DEVICE_ADDR,
- .Device_addr.bits.reserve = 0x00,
- .FW_TYPE.bits.FW_type = 0xAAAAAA,
- .FW_TYPE.bits.Chip_Value = TMS320F28335
+ .Device_addr.bits.reserve      = 0x00,
+ .FW_TYPE.bits.FW_type          = CAN_BL_APP,
+ .FW_TYPE.bits.Chip_Value       = TMS320F28335
 };
 void __disable_irq(void)
 {
@@ -90,30 +89,26 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 {
 	u8 i;
 	CanTxMsg TxMessage;//发送对应消息
-	DEVICE_INFO.Device_addr.bits.Device_addr  = DEVICE_ADDR;
-	DEVICE_INFO.Device_addr.bits.reserve = 0x00;
-	DEVICE_INFO.FW_TYPE.bits.FW_type = 0xAAAAAA;
-	DEVICE_INFO.FW_TYPE.bits.Chip_Value = TMS320F28335;
 	for(i = 0;i <8;i++)
 	{
 		TxMessage.CAN_Tx_msg_data.msg_byte.data[i] = 0x00;
 	}
-	TxMessage.CAN_num = CANA;
-	TxMessage.DLC = 1;
+	TxMessage.DLC              = 0x01;
+	TxMessage.CAN_num          = CANA;
+	TxMessage.MBox_num         = 0x03;
+	TxMessage.Tx_timeout_cnt   = 0x00;
+	TxMessage.SAE_J1939_Flag   = 0x00;
 	TxMessage.ExtId.bit.resved = 0x00;
-	TxMessage.IDE = CAN_ID_EXT;
-	TxMessage.MBox_num = 0x03;
-	TxMessage.Tx_timeout_cnt = 0x00;
-	TxMessage.SAE_J1939_Flag = 0;
+	TxMessage.IDE              = CAN_ID_EXT;
 	//获取地址信息
-	Boot_ID_info.ExtId.all = pRxMessage->ExtId;
-	can_cmd  = Boot_ID_info.ExtId.bit.cmd;
-	can_addr = Boot_ID_info.ExtId.bit.addr;
+	Boot_ID_info.ExtId.all     = pRxMessage->ExtId;
+	can_cmd                    = Boot_ID_info.ExtId.bit.cmd;
+	can_addr                   = Boot_ID_info.ExtId.bit.addr;
 	if((can_addr!=DEVICE_ADDR)&&(can_addr!=0))
 	{
-		TxMessage.ExtId.bit.ExtId = (DEVICE_ADDR<<CMD_WIDTH)|cmd_list.CmdFaild;
-		TxMessage.DLC = 1;
+		TxMessage.DLC                              = 0x01;
 		TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = 0x01;
+		TxMessage.ExtId.bit.ExtId                  = (DEVICE_INFO.Device_addr.bits.Device_addr<<CMD_WIDTH)|cmd_list.CmdFaild;
 		CAN_Tx_Msg(&TxMessage);
 		return;
 	}
@@ -124,8 +119,8 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 	{
 		if(can_addr != 0x00)
 		{
-			DEVICE_INFO.Device_addr.bits.Device_addr = DEVICE_ADDR;
-			TxMessage.ExtId.bit.ExtId = (DEVICE_INFO.Device_addr.bits.Device_addr<<CMD_WIDTH)|cmd_list.CmdSuccess;
+			TxMessage.DLC                              = 8;
+			TxMessage.ExtId.bit.ExtId                  = (DEVICE_INFO.Device_addr.bits.Device_addr<<CMD_WIDTH)|cmd_list.CmdSuccess;
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = (u8)(DEVICE_INFO.FW_Version>>24);;//主版本号，两字节
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[1] = (u8)(DEVICE_INFO.FW_Version>>16);
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[2] = (u8)(DEVICE_INFO.FW_Version>>8);//次版本号，两字节
@@ -134,7 +129,6 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[5] = (u8)(DEVICE_INFO.FW_TYPE.bits.FW_type>>8);
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[6] = (u8)(DEVICE_INFO.FW_TYPE.bits.FW_type>>0);
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[7] = (u8)(DEVICE_INFO.FW_TYPE.bits.Chip_Value>>0);
-			TxMessage.DLC = 8;
 			CAN_Tx_Msg(&TxMessage);
 		}
 	}
