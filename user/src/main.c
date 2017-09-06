@@ -22,12 +22,15 @@ void main(void)
 	taskinit();
 	DINT;
 	DRTM;
+	CsmUnlock();
 	InitPieCtrl();
 	IER = 0x0000;
 	IFR = 0x0000;
 	InitPieVectTable();
 	MemCopy(&RamfuncsLoadStart,&RamfuncsLoadEnd,&RamfuncsRunStart);
+	MemCopy(&Flash28_API_LoadStart, &Flash28_API_LoadEnd,&Flash28_API_RunStart);
 	InitFlash();
+	FlashAPI_Init();
 	EALLOW;  // This is needed to write to EALLOW protected registers
 	PieVectTable.ECAN1INTA = &Ecana_isr1;
 	PieVectTable.XINT13    = &CPU_timer1_isr;
