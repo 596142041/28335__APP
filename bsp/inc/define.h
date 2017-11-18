@@ -1,7 +1,7 @@
 /*
  * define.h
  *
- *  Created on: 2015Äê9ÔÂ4ÈÕ
+ *  Created on: 2015å¹´9æœˆ4æ—¥
  *      Author: admin
  */
 
@@ -15,8 +15,8 @@ typedef enum
 }ERROR_FLAG;
 typedef struct
 {
-	int quot;//±íÊ¾ÉÌ
-	int rem;//±íÊ¾ÓàÊı
+	int quot;//è¡¨ç¤ºå•†
+	int rem;//è¡¨ç¤ºä½™æ•°
 }DIV_t;
 typedef enum
 {

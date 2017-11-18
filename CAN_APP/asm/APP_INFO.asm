@@ -1,23 +1,23 @@
 ;####################################################
 ;APP_INFO.asm
-;Created on:2017Äê8ÔÂ8ÈÕ-ÏÂÎç11:27:04
+;Created on:2017å¹´8æœˆ8æ—¥-ä¸‹åˆ11:27:04
 ;Author:admin
 ;Version:
 ;#####################################################
     .sect "APP_info"
-	.int	0xFFFF		;MCU_ID,0x3F3FF8,0x11=Í¬²½Ö÷Çı,0x22=Í¬²½ISG,03=Òì²½ISG,04=Òì²½ÓÍ±Ã,05=Òì²½Æû±Ã,06=Òì²½¿Õµ÷,07=Í¬²½¿Õµ÷,08=Í¬²½ÓÍ±Ã,09=Í¬²½Æû±Ã,252=Òì²½Ö÷Çı
+	.int	0xFFFF		;MCU_ID,0x3F3FF8,0x11=åŒæ­¥ä¸»é©±,0x22=åŒæ­¥ISG,03=å¼‚æ­¥ISG,04=å¼‚æ­¥æ²¹æ³µ,05=å¼‚æ­¥æ±½æ³µ,06=å¼‚æ­¥ç©ºè°ƒ,07=åŒæ­¥ç©ºè°ƒ,08=åŒæ­¥æ²¹æ³µ,09=åŒæ­¥æ±½æ³µ,252=å¼‚æ­¥ä¸»é©±
 	.int	0xFFFF		;MCU_ver,0x3F3FF9
     .int	0xFFFF		;Flashtype,0x3F3FFA,0xFFF1-cana,0xFFF2-canb,0xFFF3-coma
-	.int	0xFFFF		;baud,0x3F3FFB,0xFFF1=125,0xFFF4=500k,0xFFF2»òÆäËü=250k
-	.int	0xFFFF		;Filetype,0x3F3FFC,0xFFFe=¼ÓÃÜ,0xFFFF»òÆäËü=Î´¼ÓÃÜ
+	.int	0xFFFF		;baud,0x3F3FFB,0xFFF1=125,0xFFF4=500k,0xFFF2æˆ–å…¶å®ƒ=250k
+	.int	0xFFFF		;Filetype,0x3F3FFC,0xFFFe=åŠ å¯†,0xFFFFæˆ–å…¶å®ƒ=æœªåŠ å¯†
 	.int	0xFFFF		;0x3F3FFD
 	.int	0xFFFF		;0x3F3FFE
 	.int	0x55BB		;FlashFlg,0x3F3FFF
-	.int	0xFF11		;MCU_ID,0x3F3FF8,0x11=Í¬²½Ö÷Çı,0x22=Í¬²½ISG,03=Òì²½ISG,04=Òì²½ÓÍ±Ã,05=Òì²½Æû±Ã,06=Òì²½¿Õµ÷,07=Í¬²½¿Õµ÷,08=Í¬²½ÓÍ±Ã,09=Í¬²½Æû±Ã,252=Òì²½Ö÷Çı
+	.int	0xFF11		;MCU_ID,0x3F3FF8,0x11=åŒæ­¥ä¸»é©±,0x22=åŒæ­¥ISG,03=å¼‚æ­¥ISG,04=å¼‚æ­¥æ²¹æ³µ,05=å¼‚æ­¥æ±½æ³µ,06=å¼‚æ­¥ç©ºè°ƒ,07=åŒæ­¥ç©ºè°ƒ,08=åŒæ­¥æ²¹æ³µ,09=åŒæ­¥æ±½æ³µ,252=å¼‚æ­¥ä¸»é©±
 	.int	0xFF02		;MCU_ver,0x3F3FF9
     .int	0xFFFF		;Flashtype,0x3F3FFA,0xFFF1-cana,0xFFF2-canb,0xFFF3-coma
-	.int	0xFFFF		;baud,0x3F3FFB,0xFFF1=125,0xFFF4=500k,0xFFF2»òÆäËü=250k
-	.int	0xFFFF		;Filetype,0x3F3FFC,0xFFFe=¼ÓÃÜ,0xFFFF»òÆäËü=Î´¼ÓÃÜ
+	.int	0xFFFF		;baud,0x3F3FFB,0xFFF1=125,0xFFF4=500k,0xFFF2æˆ–å…¶å®ƒ=250k
+	.int	0xFFFF		;Filetype,0x3F3FFC,0xFFFe=åŠ å¯†,0xFFFFæˆ–å…¶å®ƒ=æœªåŠ å¯†
 	.int	0xFFFF		;0x3F3FFD
 	.int	0xFFFF		;0x3F3FFE
 	.int	0x55BB		;FlashFlg,0x3F3FFF
