@@ -1,4 +1,4 @@
-//¶¨Ê±Æ÷ÅäÖÃ²¿·ÖÏà¹Øº¯Êı,ĞèÒª²úÉú20KHzµÄÊ±ÖÓĞÅºÅ
+//å®šæ—¶å™¨é…ç½®éƒ¨åˆ†ç›¸å…³å‡½æ•°,éœ€è¦äº§ç”Ÿ20KHzçš„æ—¶é’Ÿä¿¡å·
 /* ----------------------- Platform includes --------------------------------*/
 #include "port.h"
 
@@ -9,31 +9,31 @@ USHORT temp;
 /* ----------------------- Start implementation -----------------------------*/
 BOOL xMBPortTimersInit( USHORT usTim1Timerout50us )
 {
-	    //Ê¹ÄÜÊ±ÖÓ
+	    //ä½¿èƒ½æ—¶é’Ÿ
 		temp = usTim1Timerout50us*50;
 		EALLOW;
 		 SysCtrlRegs.PCLKCR3.bit.CPUTIMER0ENCLK = 1; // CPU Timer2
 		 EDIS;
-	    /**--------ÒÔÏÂ´úÂëÊÇ³õÊ¼»¯CPU¶¨Ê±Æ÷0---------**/
+	    /**--------ä»¥ä¸‹ä»£ç æ˜¯åˆå§‹åŒ–CPUå®šæ—¶å™¨0---------**/
 
 	#if CPU_FRQ_150MHZ
-	    ConfigCpuTimer(&CpuTimer0,150,temp);//1.2msµÄÖÜÆÚ
+	    ConfigCpuTimer(&CpuTimer0,150,temp);//1.2msçš„å‘¨æœŸ
 	#endif
-	    CpuTimer0Regs.TCR.bit.FREE = 0x01;//·ÂÕæ¿ØÖÆÎ»£¬µ±·ÂÕæÔİÍ£Ê±£¬¶¨Ê±Æ÷µÄ¹¤×÷×´Ì¬
-	    CpuTimer0Regs.TCR.bit.SOFT = 0x00;//FREEºÍSOFTÎ»ÅäÖÃ·ÂÕæ¿ØÖÆ
-	    CpuTimer0Regs.TCR.bit.TRB  = 0x01;//¶¨Ê±Æ÷ÖØĞÂ×°ÔØÎ»,Ğ´1±íÊ¾½«·¢ÉúÔ¤·ÖÆµ¼Ä´æÆ÷ºÍÖÜÆÚ¼Ä´æÆ÷ÖØĞÂ×°ÔØÊÂ¼ş
-	    CpuTimer0Regs.TCR.bit.TIF  = 0x01;//Çå³ıÖĞ¶Ï±êÖ¾Î»
-	    CpuTimer0Regs.TCR.bit.TIE  = 0x01;//Ê¹ÄÜ¶¨Ê±Æ÷ÖĞ¶Ï
-	    CpuTimer0Regs.TCR.bit.TSS  = 0x01;//¶¨Ê±Æ÷µÄÆô¶¯ºÍÍ£Ö¹Î»£¬Ğ´1Í£Ö¹¶¨Ê±Æ÷£¬Ğ´0Æô¶¯¶¨Ê±Æ÷
-	    CpuTimer0Regs.TIM.all      = 0;   //¼ÆÊıÆ÷ÇåÁã
+	    CpuTimer0Regs.TCR.bit.FREE = 0x01;//ä»¿çœŸæ§åˆ¶ä½ï¼Œå½“ä»¿çœŸæš‚åœæ—¶ï¼Œå®šæ—¶å™¨çš„å·¥ä½œçŠ¶æ€
+	    CpuTimer0Regs.TCR.bit.SOFT = 0x00;//FREEå’ŒSOFTä½é…ç½®ä»¿çœŸæ§åˆ¶
+	    CpuTimer0Regs.TCR.bit.TRB  = 0x01;//å®šæ—¶å™¨é‡æ–°è£…è½½ä½,å†™1è¡¨ç¤ºå°†å‘ç”Ÿé¢„åˆ†é¢‘å¯„å­˜å™¨å’Œå‘¨æœŸå¯„å­˜å™¨é‡æ–°è£…è½½äº‹ä»¶
+	    CpuTimer0Regs.TCR.bit.TIF  = 0x01;//æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
+	    CpuTimer0Regs.TCR.bit.TIE  = 0x01;//ä½¿èƒ½å®šæ—¶å™¨ä¸­æ–­
+	    CpuTimer0Regs.TCR.bit.TSS  = 0x01;//å®šæ—¶å™¨çš„å¯åŠ¨å’Œåœæ­¢ä½ï¼Œå†™1åœæ­¢å®šæ—¶å™¨ï¼Œå†™0å¯åŠ¨å®šæ—¶å™¨
+	    CpuTimer0Regs.TIM.all      = 0;   //è®¡æ•°å™¨æ¸…é›¶
 	return TRUE;
 }
 void vMBPortTimersEnable(void)
 {
    PieCtrlRegs.PIEACK.bit.ACK1 = 1;
-   CpuTimer0Regs.TIM.all      = 0;   //¼ÆÊıÆ÷ÇåÁã
-   CpuTimer0Regs.TCR.bit.TIF  = 0x01;//Çå³ıÖĞ¶Ï±êÖ¾Î»
-   CpuTimer0Regs.TCR.bit.TIE  = 0x01;//Ê¹ÄÜ¶¨Ê±Æ÷ÖĞ¶Ï
+   CpuTimer0Regs.TIM.all      = 0;   //è®¡æ•°å™¨æ¸…é›¶
+   CpuTimer0Regs.TCR.bit.TIF  = 0x01;//æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
+   CpuTimer0Regs.TCR.bit.TIE  = 0x01;//ä½¿èƒ½å®šæ—¶å™¨ä¸­æ–­
    ReloadCpuTimer0();
    StartCpuTimer0();
 }
@@ -41,14 +41,14 @@ void vMBPortTimersEnable(void)
 void vMBPortTimersDisable(void)
 {
     /* Disable any pending timers. */
-	CpuTimer0Regs.TIM.all      = 0;   //¼ÆÊıÆ÷ÇåÁã
-	CpuTimer0Regs.TCR.bit.TIE  = 0;//Ê¹ÄÜ¶¨Ê±Æ÷ÖĞ¶Ï
-	CpuTimer0Regs.TCR.bit.TIF  = 1;//Çå³ıÖĞ¶Ï±êÖ¾Î»
+	CpuTimer0Regs.TIM.all      = 0;   //è®¡æ•°å™¨æ¸…é›¶
+	CpuTimer0Regs.TCR.bit.TIE  = 0;//ä½¿èƒ½å®šæ—¶å™¨ä¸­æ–­
+	CpuTimer0Regs.TCR.bit.TIF  = 1;//æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
 	StopCpuTimer0();
 }
 
 /*******************************************************************************
-* @Name   : CPU¶¨Ê±Æ÷2ÖĞ¶Ïº¯Êı
+* @Name   : CPUå®šæ—¶å™¨2ä¸­æ–­å‡½æ•°
 *
 * @Brief  : none
 *
@@ -61,6 +61,6 @@ void vMBPortTimersDisable(void)
 __interrupt void cpu_timer2_isr(void)
 {
 	pxMBPortCBTimerExpired(  );
-	  CpuTimer0Regs.TCR.bit.TIF  = 0x01;//Çå³ıÖĞ¶Ï±êÖ¾Î»
+	  CpuTimer0Regs.TCR.bit.TIF  = 0x01;//æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
 	PieCtrlRegs.PIEACK.bit.ACK1 = 1;
 }

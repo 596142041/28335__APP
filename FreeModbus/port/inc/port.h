@@ -13,7 +13,7 @@
 void __assert(const char * x1, const char * x2, int x3);
 
 
-//Êı¾İÀàĞÍ¶¨Òå
+//æ•°æ®ç±»å‹å®šä¹‰
 typedef unsigned char UCHAR;
 typedef char CHAR;
 typedef UCHAR BOOL;
@@ -21,13 +21,13 @@ typedef unsigned short int USHORT;
 typedef short int SHORT;
 typedef unsigned long int ULONG;
 typedef long int LONG;
-//485 ½Ó¿Úºê¶¨Òå
+//485 æ¥å£å®å®šä¹‰
 #define USER_RS485_Port 0
 #define RS485_Pin GpioDataRegs.GPADAT.bit.GPIO0
 #define TX_EN 1
 #define RX_EN 0
-#define ENTER_CRITICAL_SECTION()   INTX_DISABLE() //¹Ø×ÜÖĞ¶Ï
-#define EXIT_CRITICAL_SECTION()    INTX_ENABLE() //¿ª×ÜÖĞ¶Ï
+#define ENTER_CRITICAL_SECTION()   INTX_DISABLE() //å…³æ€»ä¸­æ–­
+#define EXIT_CRITICAL_SECTION()    INTX_ENABLE() //å¼€æ€»ä¸­æ–­
 #ifndef TRUE
 #define TRUE            1
 #endif
@@ -40,21 +40,21 @@ __interrupt void serial_Rx_isr(void);
 __interrupt void serial_Tx_isr(void);
 __interrupt void cpu_timer2_isr(void);
 
-//ÊäÈë¼Ä´æÆ÷Ïà¹Ø²ÎÊı
-#define REG_INPUT_START                          (USHORT)0x0001  //ÆğÊ¼¼Ä´æÆ÷
-#define REG_INPUT_NREGS                          (USHORT)40  //¼Ä´æÆ÷¸öÊı
-//±£³Ö¼Ä´æÆ÷Ïà¹Ø²ÎÊı
-#define REG_HOLDING_START                        (USHORT)50  //±£³Ö¼Ä´æÆ÷
-#define REG_HOLDING_NREGS                        (USHORT)20  //±£³Ö¼Ä´æÆ÷¸öÊı
-//ÏßÈ¦¼Ä´æÆ÷Ïà¹Ø²ÎÊı
-#define REG_Coils_START                          (USHORT)80//ÏßÈ¦¼Ä´æÆ÷ÆğÊ¼µØÖ·
-#define REG_Coils_NREGS                          (USHORT)24//ÏßÈ¦¼Ä´æÆ÷¸öÊı(×îºÃÊÇ8µÄ±¶Êı;
-//ÀëÉ¢¼Ä´æÆ÷Ïà¹Ø²ÎÊı
+//è¾“å…¥å¯„å­˜å™¨ç›¸å…³å‚æ•°
+#define REG_INPUT_START                          (USHORT)0x0001  //èµ·å§‹å¯„å­˜å™¨
+#define REG_INPUT_NREGS                          (USHORT)40  //å¯„å­˜å™¨ä¸ªæ•°
+//ä¿æŒå¯„å­˜å™¨ç›¸å…³å‚æ•°
+#define REG_HOLDING_START                        (USHORT)50  //ä¿æŒå¯„å­˜å™¨
+#define REG_HOLDING_NREGS                        (USHORT)20  //ä¿æŒå¯„å­˜å™¨ä¸ªæ•°
+//çº¿åœˆå¯„å­˜å™¨ç›¸å…³å‚æ•°
+#define REG_Coils_START                          (USHORT)80//çº¿åœˆå¯„å­˜å™¨èµ·å§‹åœ°å€
+#define REG_Coils_NREGS                          (USHORT)24//çº¿åœˆå¯„å­˜å™¨ä¸ªæ•°(æœ€å¥½æ˜¯8çš„å€æ•°;
+//ç¦»æ•£å¯„å­˜å™¨ç›¸å…³å‚æ•°
 #define REG_Discrete_START						 (USHORT)120
 #define REG_Discrete_NREG						 (USHORT)32
-extern USHORT usRegInputBuf[REG_INPUT_NREGS];//ÊäÈë¼Ä´æÆ÷,modbusĞ­ÒéÖ»ÄÜ¶ÁÈ¡¸Ã¼Ä´æÆ÷,²»ÄÜĞŞ¸Ä
-extern USHORT usRegHoldingBuf[REG_HOLDING_NREGS];//±£³Ö¼Ä´æÆ÷,modbusĞ­Òé¼ÈÄÜĞŞ¸Ä¸Ã¼Ä´æÆ÷,ÓÖÄÜ¶ÁÈ¡¸Ã¼Ä´æÆ÷
-extern UCHAR CoilsReg_Buf[3];//ÏßÈ¦¼Ä´æÆ÷Êı×é£¬¸ÃÊı×é³¤¶ÈÎªÏßÈ¦¼Ä´æÆ÷µÄ¸öÊı³ıÒÔ8,Èç¹ûÓàÊı²»Îª0,¼Ó1,¸Ã¼Ä´æÆ÷Ğ­Òé¿É¶Á¿ÉĞ´
+extern USHORT usRegInputBuf[REG_INPUT_NREGS];//è¾“å…¥å¯„å­˜å™¨,modbusåè®®åªèƒ½è¯»å–è¯¥å¯„å­˜å™¨,ä¸èƒ½ä¿®æ”¹
+extern USHORT usRegHoldingBuf[REG_HOLDING_NREGS];//ä¿æŒå¯„å­˜å™¨,modbusåè®®æ—¢èƒ½ä¿®æ”¹è¯¥å¯„å­˜å™¨,åˆèƒ½è¯»å–è¯¥å¯„å­˜å™¨
+extern UCHAR CoilsReg_Buf[3];//çº¿åœˆå¯„å­˜å™¨æ•°ç»„ï¼Œè¯¥æ•°ç»„é•¿åº¦ä¸ºçº¿åœˆå¯„å­˜å™¨çš„ä¸ªæ•°é™¤ä»¥8,å¦‚æœä½™æ•°ä¸ä¸º0,åŠ 1,è¯¥å¯„å­˜å™¨åè®®å¯è¯»å¯å†™
 extern UCHAR DiscreteReg_Buf[4];
 
 #endif

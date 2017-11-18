@@ -2,30 +2,30 @@
 #include "mb.h"
 #include "mbport.h"
 #include "mbutils.h"
-//ÊäÈë¼Ä´æÆ÷
+//è¾“å…¥å¯„å­˜å™¨
 USHORT usRegInputStart = REG_INPUT_START;
 USHORT usRegInputBuf[REG_INPUT_NREGS] = {0x00};
-//±£³Ö¼Ä´æÆ÷
+//ä¿æŒå¯„å­˜å™¨
 USHORT usRegHoldingStart = REG_HOLDING_START;
 USHORT usRegHoldingBuf[REG_HOLDING_NREGS] = {0x00};
-//ÏßÈ¦¼Ä´æÆ÷
+//çº¿åœˆå¯„å­˜å™¨
 USHORT CoilsReg_Start = REG_Coils_START;
 UCHAR CoilsReg_Buf[3] = {0x00};
-//ÀëÉ¢¼Ä´æÆ÷
+//ç¦»æ•£å¯„å­˜å™¨
 USHORT Discrete_Start = REG_Discrete_START;
 UCHAR DiscreteReg_Buf[4];
 void __assert(const char * x1, const char * x2, int x3)
 {
 	(void)x3;
 }
-//ÒÔÏÂ´úÂëÊÇ¹ØÓÚÈ«¾ÖÖĞ¶ÏÊ¹ÄÜºÍ¹Ø±Õ
-void EnterCriticalSection(  )//¹Ø±ÕÈ«¾ÖÖĞ¶Ï
+//ä»¥ä¸‹ä»£ç æ˜¯å…³äºå…¨å±€ä¸­æ–­ä½¿èƒ½å’Œå…³é—­
+void EnterCriticalSection(  )//å…³é—­å…¨å±€ä¸­æ–­
 {
 	asm(" setc DBGM");
 	asm(" setc INTM");
 }
 
-void ExitCriticalSection(  )//Ê¹ÄÜÈ«¾ÖÖĞ¶Ï
+void ExitCriticalSection(  )//ä½¿èƒ½å…¨å±€ä¸­æ–­
 {
 	asm(" clrc INTM");
 	asm(" clrc DBGM");
@@ -41,37 +41,37 @@ void  INTX_ENABLE(void)
 	asm(" clrc DBGM");
 }
 /*******************************************************************************
-* @Name   : ²Ù×÷ÊäÈë¼Ä´æÆ÷
+* @Name   : æ“ä½œè¾“å…¥å¯„å­˜å™¨
 *
-* @Brief  : ¶ÔÓ¦¹¦ÄÜÂë0x04 -> eMBFuncReadInputRegister
+* @Brief  : å¯¹åº”åŠŸèƒ½ç 0x04 -> eMBFuncReadInputRegister
 *
-* @Input  : *pucRegBuffer:Êı¾İ»º³åÇø£¬ÏìÓ¦Ö÷»úÓÃ
-*           usAddress:     ¼Ä´æÆ÷µØÖ·
-*           usNRegs:       ²Ù×÷¼Ä´æÆ÷¸öÊı
+* @Input  : *pucRegBuffer:æ•°æ®ç¼“å†²åŒºï¼Œå“åº”ä¸»æœºç”¨
+*           usAddress:     å¯„å­˜å™¨åœ°å€
+*           usNRegs:       æ“ä½œå¯„å­˜å™¨ä¸ªæ•°
 *
 * @Output : none
 *
-* @Return : Modbus×´Ì¬ĞÅÏ¢
+* @Return : ModbusçŠ¶æ€ä¿¡æ¯
 *******************************************************************************/
 eMBErrorCode eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
 {
 	eMBErrorCode eStatus = MB_ENOERR;
 	int          iRegIndex = 0;
 	//
-	//ÅĞ¶ÏµØÖ·ºÏ·¨ĞÔ
+	//åˆ¤æ–­åœ°å€åˆæ³•æ€§
 	//
 	if ((usAddress >= REG_INPUT_START) && (usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS))
 	{
 		iRegIndex = (int)(usAddress - usRegInputStart);
 		while (usNRegs > 0)
 		{
-			*pucRegBuffer++ = (UCHAR)( usRegInputBuf[iRegIndex] >> 8);  //¸ß8Î»×Ö½Ú
-			*pucRegBuffer++ = (UCHAR)( usRegInputBuf[iRegIndex] & 0xFF); //µÍ8Î»×Ö½Ú
+			*pucRegBuffer++ = (UCHAR)( usRegInputBuf[iRegIndex] >> 8);  //é«˜8ä½å­—èŠ‚
+			*pucRegBuffer++ = (UCHAR)( usRegInputBuf[iRegIndex] & 0xFF); //ä½8ä½å­—èŠ‚
 			iRegIndex++;
 			usNRegs--;
 		}
 	}
-	else  //´íÎóµØÖ·
+	else  //é”™è¯¯åœ°å€
 	{
 		eStatus = MB_ENOREG;
 	}
@@ -80,59 +80,59 @@ eMBErrorCode eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRe
 }
 
 /******************************************************************************
-* @Name   : ²Ù×÷±£³Ö¼Ä´æÆ÷
+* @Name   : æ“ä½œä¿æŒå¯„å­˜å™¨
 *
-* @Brief  : ¶ÔÓ¦¹¦ÄÜÂë0x06 -> eMBFuncWriteHoldingRegister
+* @Brief  : å¯¹åº”åŠŸèƒ½ç 0x06 -> eMBFuncWriteHoldingRegister
 *                    0x16 -> eMBFuncWriteMultipleHoldingRegister
 *                    0x03 -> eMBFuncReadHoldingRegister
 *                    0x23 -> eMBFuncReadWriteMultipleHoldingRegister
 *
-* @Input  : *pucRegBuffer:Êı¾İ»º³åÇø£¬ÏìÓ¦Ö÷»úÓÃ
-*           usAddress:     ¼Ä´æÆ÷µØÖ·
-*           usNRegs:       ²Ù×÷¼Ä´æÆ÷¸öÊı
-*           eMode:         ¹¦ÄÜÂë
+* @Input  : *pucRegBuffer:æ•°æ®ç¼“å†²åŒºï¼Œå“åº”ä¸»æœºç”¨
+*           usAddress:     å¯„å­˜å™¨åœ°å€
+*           usNRegs:       æ“ä½œå¯„å­˜å™¨ä¸ªæ•°
+*           eMode:         åŠŸèƒ½ç 
 *
 * @Output : none
 *
-* @Return : Modbus×´Ì¬ĞÅÏ¢
+* @Return : ModbusçŠ¶æ€ä¿¡æ¯
 ******************************************************************************/
 eMBErrorCode eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode )
 {
 	eMBErrorCode eStatus = MB_ENOERR;
 	int          iRegIndex = 0;
 	//
-	//ÅĞ¶ÏµØÖ·ÊÇ·ñºÏ·¨
+	//åˆ¤æ–­åœ°å€æ˜¯å¦åˆæ³•
 	//
 	if((usAddress >= REG_HOLDING_START) && ((usAddress + usNRegs) <= (REG_HOLDING_START + REG_HOLDING_NREGS)))
 	{
 		iRegIndex = (int)(usAddress - usRegHoldingStart);
 		//
-		//¸ù¾İ¹¦ÄÜÂë½øĞĞ²Ù×÷
+		//æ ¹æ®åŠŸèƒ½ç è¿›è¡Œæ“ä½œ
 		//
 		switch(eMode)
 		{
-			case MB_REG_READ:  //¶Á±£³Ö¼Ä´æÆ÷
+			case MB_REG_READ:  //è¯»ä¿æŒå¯„å­˜å™¨
 					while(usNRegs > 0)
 					{
-						*pucRegBuffer++ = (UCHAR)(usRegHoldingBuf[iRegIndex] >> 8);  //¸ß8Î»×Ö½Ú
-						*pucRegBuffer++ = (UCHAR)(usRegHoldingBuf[iRegIndex] & 0xFF); //µÍ8Î»×Ö½Ú
+						*pucRegBuffer++ = (UCHAR)(usRegHoldingBuf[iRegIndex] >> 8);  //é«˜8ä½å­—èŠ‚
+						*pucRegBuffer++ = (UCHAR)(usRegHoldingBuf[iRegIndex] & 0xFF); //ä½8ä½å­—èŠ‚
 						iRegIndex++;
 						usNRegs--;
 					}                            
 					break;
 					
-			case MB_REG_WRITE:  //Ğ´±£³Ö¼Ä´æÆ÷
+			case MB_REG_WRITE:  //å†™ä¿æŒå¯„å­˜å™¨
 					while(usNRegs > 0)
 					{
-						usRegHoldingBuf[iRegIndex] = *pucRegBuffer++ << 8;  //¸ß8Î»×Ö½Ú
-						usRegHoldingBuf[iRegIndex] |= *pucRegBuffer++;  //µÍ8Î»×Ö½Ú
+						usRegHoldingBuf[iRegIndex] = *pucRegBuffer++ << 8;  //é«˜8ä½å­—èŠ‚
+						usRegHoldingBuf[iRegIndex] |= *pucRegBuffer++;  //ä½8ä½å­—èŠ‚
 						iRegIndex++;
 						usNRegs--;
 					}
 					break;
 		}
 	}
-	else  //´íÎóµØÖ·
+	else  //é”™è¯¯åœ°å€
 	{
 		eStatus = MB_ENOREG;
 	}
@@ -141,20 +141,20 @@ eMBErrorCode eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usN
 }
 
 /*******************************************************************************
-* @Name   : ²Ù×÷ÏßÈ¦
+* @Name   : æ“ä½œçº¿åœˆ
 *
-* @Brief  : ¶ÔÓ¦¹¦ÄÜÂë0x01 -> eMBFuncReadCoils
-*                    0x05 ->Ğ´µ¥¸öÏßÈ¦ eMBFuncWriteCoil
-*                    0x15 -> Ğ´¶à¸öÏßÈ¦ eMBFuncWriteMultipleCoils
+* @Brief  : å¯¹åº”åŠŸèƒ½ç 0x01 -> eMBFuncReadCoils
+*                    0x05 ->å†™å•ä¸ªçº¿åœˆ eMBFuncWriteCoil
+*                    0x15 -> å†™å¤šä¸ªçº¿åœˆ eMBFuncWriteMultipleCoils
 *
-* @Input  : *pucRegBuffer: Êı¾İ»º³åÇø£¬ÏìÓ¦Ö÷»úÓÃ
-*           usAddress:     ¼Ä´æÆ÷µØÖ·
-*           usNRegs:       ²Ù×÷¼Ä´æÆ÷¸öÊı
-*           eMode:         ¹¦ÄÜÂë
+* @Input  : *pucRegBuffer: æ•°æ®ç¼“å†²åŒºï¼Œå“åº”ä¸»æœºç”¨
+*           usAddress:     å¯„å­˜å™¨åœ°å€
+*           usNRegs:       æ“ä½œå¯„å­˜å™¨ä¸ªæ•°
+*           eMode:         åŠŸèƒ½ç 
 *
 * @Output : none
 *
-* @Return : Modbus×´Ì¬ĞÅÏ¢
+* @Return : ModbusçŠ¶æ€ä¿¡æ¯
 *******************************************************************************/
 eMBErrorCode eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegisterMode eMode )
 {
@@ -199,17 +199,17 @@ eMBErrorCode eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCo
     return eStatus;
 }
 /*******************************************************************************
-* @Name   : ²Ù×÷ÀëÉ¢¼Ä´æÆ÷
+* @Name   : æ“ä½œç¦»æ•£å¯„å­˜å™¨
 *
-* @Brief  : ¶ÔÓ¦¹¦ÄÜÂë0x02 -> eMBFuncReadDiscreteInputs
+* @Brief  : å¯¹åº”åŠŸèƒ½ç 0x02 -> eMBFuncReadDiscreteInputs
 *
-* @Input  : *pucRegBuffer: Êı¾İ»º³åÇø£¬ÏìÓ¦Ö÷»úÓÃ
-*           usAddress:     ¼Ä´æÆ÷µØÖ·
-*           usNRegs:       ²Ù×÷¼Ä´æÆ÷¸öÊı
+* @Input  : *pucRegBuffer: æ•°æ®ç¼“å†²åŒºï¼Œå“åº”ä¸»æœºç”¨
+*           usAddress:     å¯„å­˜å™¨åœ°å€
+*           usNRegs:       æ“ä½œå¯„å­˜å™¨ä¸ªæ•°
 *
 * @Output : none
 *
-* @Return : Modbus×´Ì¬ĞÅÏ¢
+* @Return : ModbusçŠ¶æ€ä¿¡æ¯
 *******************************************************************************/
 eMBErrorCode eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 {
