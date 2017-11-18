@@ -1,36 +1,37 @@
 /*
  * CAN_APP.c
  *
- *  Created on: 2017Äê5ÔÂ21ÈÕ
+ *  Created on: 2017å¹´5æœˆ21æ—¥
  *      Author: admin
  */
 #include "CAN_APP.h"
 #define DATA_LEN  520
 #define READ_MAX  256
 bootloader_data Boot_ID_info;
-u8  can_cmd       = (u8 )0x00;//IDµÄbit0~bit3Î»ÎªÃüÁîÂë
-u16 can_addr      = (u16)0x00;;//IDµÄbit4~bit15Î»Îª½ÚµãµØÖ·
-u32 exe_type      = (u32)0x00;
-u32 read_addr     = (u32)0x00;//¶ÁÈ¡Êı¾İÆğÊ¼µØÖ·
-u32 read_len      = (u32)0x00;//¶ÁÈ¡Êı¾İ³¤¶È
-u32 data_index    = (u32)0x00;//Êı¾İÖ¸Õë
+u8  can_cmd         = (u8 )0x00;//IDçš„bit0~bit3ä½ä¸ºå‘½ä»¤ç 
+u16 can_addr        = (u16)0x00;;//IDçš„bit4~bit15ä½ä¸ºèŠ‚ç‚¹åœ°å€
+u32 exe_type        = (u32)0x00;
+u32 read_addr       = (u32)0x00;//è¯»å–æ•°æ®èµ·å§‹åœ°å€
+u32 read_len        = (u32)0x00;//è¯»å–æ•°æ®é•¿åº¦
+u32 data_index      = (u32)0x00;//æ•°æ®æŒ‡é’ˆ
+Uint16 app_check[2] = {0xF2F2,0xF3F3};
 u8	   data_temp[DATA_LEN*2];
 Uint16 read_temp[READ_MAX];
 Boot_CMD_LIST cmd_list =
 {
-	.Read        = 0x0A, //¶ÁÈ¡flashÊı¾İ
-	.Erase       = 0x00, //²Á³ıAPPÇøÓòÊı¾İ
-	.Write       = 0x02,//ÒÔ¶à×Ö½ÚĞÎÊ½Ğ´Êı¾İ
-	.Check       = 0x03,//¼ì²â½ÚµãÊÇ·ñÔÚÏß£¬Í¬Ê±·µ»Ø¹Ì¼şĞÅÏ¢
-	.Excute      = 0x05,//Ö´ĞĞ¹Ì¼ş
-	.CmdFaild    = 0x09,//ÃüÁîÖ´ĞĞÊ§°Ü
-	.WriteInfo   = 0x01,//ÉèÖÃ¶à×Ö½ÚĞ´Êı¾İÏà¹Ø²ÎÊı(Ğ´ÆğÊ¼µØÖ·,Êı¾İÁ¿)
-	.CmdSuccess  = 0x08,//ÃüÁîÖ´ĞĞ³É¹¦
-	.SetBaudRate = 0x04,//ÉèÖÃ½Úµã²¨ÌØÂÊ
+	.Read        = 0x0A, //è¯»å–flashæ•°æ®
+	.Erase       = 0x00, //æ“¦é™¤APPåŒºåŸŸæ•°æ®
+	.Write       = 0x02,//ä»¥å¤šå­—èŠ‚å½¢å¼å†™æ•°æ®
+	.Check       = 0x03,//æ£€æµ‹èŠ‚ç‚¹æ˜¯å¦åœ¨çº¿ï¼ŒåŒæ—¶è¿”å›å›ºä»¶ä¿¡æ¯
+	.Excute      = 0x05,//æ‰§è¡Œå›ºä»¶
+	.CmdFaild    = 0x09,//å‘½ä»¤æ‰§è¡Œå¤±è´¥
+	.WriteInfo   = 0x01,//è®¾ç½®å¤šå­—èŠ‚å†™æ•°æ®ç›¸å…³å‚æ•°(å†™èµ·å§‹åœ°å€,æ•°æ®é‡)
+	.CmdSuccess  = 0x08,//å‘½ä»¤æ‰§è¡ŒæˆåŠŸ
+	.SetBaudRate = 0x04,//è®¾ç½®èŠ‚ç‚¹æ³¢ç‰¹ç‡
 };
 Device_INFO DEVICE_INFO =
 {
- .FW_Version                    = 0x0011121,
+ .FW_Version                    = 0x0011001,
  .Device_addr.bits.Device_addr  = DEVICE_ADDR,
  .Device_addr.bits.reserve      = 0x00,
  .FW_TYPE.bits.FW_type          = CAN_BL_APP,
@@ -90,7 +91,7 @@ void CAN_BOOT_JumpToApplication(uint32_t Addr)
 void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 {
 	u8 i;
-	CanTxMsg TxMessage;//·¢ËÍ¶ÔÓ¦ÏûÏ¢
+	CanTxMsg TxMessage;//å‘é€å¯¹åº”æ¶ˆæ¯
 	for(i = 0;i <8;i++)
 	{
 		TxMessage.CAN_Tx_msg_data.msg_byte.data[i] = 0x00;
@@ -102,11 +103,11 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 	TxMessage.SAE_J1939_Flag   = 0x00;
 	TxMessage.ExtId.bit.resved = 0x00;
 	TxMessage.IDE              = CAN_ID_EXT;
-	//»ñÈ¡µØÖ·ĞÅÏ¢
-	Boot_ID_info.ExtId.all     = pRxMessage->ExtId;
+	//è·å–åœ°å€ä¿¡æ¯
+	Boot_ID_info.ExtId.all     = pRxMessage->ExtId.bit.ExtId;
 	can_cmd                    = Boot_ID_info.ExtId.bit.cmd;
 	can_addr                   = Boot_ID_info.ExtId.bit.addr;
-	if((can_addr!=DEVICE_ADDR)&&(can_addr!=0))
+	if((can_addr!=DEVICE_ADDR))
 	{
 		TxMessage.DLC                              = 0x01;
 		TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = 0x01;
@@ -114,18 +115,18 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 		CAN_Tx_Msg(&TxMessage);
 		return;
 	}
-	//CMD_List.Check£¬½ÚµãÔÚÏß¼ì²â
-	//½ÚµãÊÕµ½¸ÃÃüÁîºó·µ»Ø¹Ì¼ş°æ±¾ĞÅÏ¢ºÍ¹Ì¼şÀàĞÍ£¬
-	//¸ÃÃüÁîÔÚBootloader³ÌĞòºÍAPP³ÌĞò¶¼±ØĞëÊµÏÖ
-	if(can_cmd == cmd_list.Check)//DSPÖĞÉĞÎ´ÊµÏÖ,Ïà¶Ô±È½ÏÈİÒ×ÊµÏÖ,Ö÷ÒªÊÇÎªÊµÏÖAPPÔÙ´Î¸üĞÂÓ¦ÓÃ³ÌĞò
+	//CMD_List.Checkï¼ŒèŠ‚ç‚¹åœ¨çº¿æ£€æµ‹
+	//èŠ‚ç‚¹æ”¶åˆ°è¯¥å‘½ä»¤åè¿”å›å›ºä»¶ç‰ˆæœ¬ä¿¡æ¯å’Œå›ºä»¶ç±»å‹ï¼Œ
+	//è¯¥å‘½ä»¤åœ¨Bootloaderç¨‹åºå’ŒAPPç¨‹åºéƒ½å¿…é¡»å®ç°
+	if(can_cmd == cmd_list.Check)//DSPä¸­å°šæœªå®ç°,ç›¸å¯¹æ¯”è¾ƒå®¹æ˜“å®ç°,ä¸»è¦æ˜¯ä¸ºå®ç°APPå†æ¬¡æ›´æ–°åº”ç”¨ç¨‹åº
 	{
 		if(can_addr != 0x00)
 		{
 			TxMessage.DLC                              = 8;
 			TxMessage.ExtId.bit.ExtId                  = (DEVICE_INFO.Device_addr.bits.Device_addr<<CMD_WIDTH)|cmd_list.CmdSuccess;
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = (u8)(DEVICE_INFO.FW_Version>>24);;//Ö÷°æ±¾ºÅ£¬Á½×Ö½Ú
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = (u8)(DEVICE_INFO.FW_Version>>24);;//ä¸»ç‰ˆæœ¬å·ï¼Œä¸¤å­—èŠ‚
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[1] = (u8)(DEVICE_INFO.FW_Version>>16);
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[2] = (u8)(DEVICE_INFO.FW_Version>>8);//´Î°æ±¾ºÅ£¬Á½×Ö½Ú
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[2] = (u8)(DEVICE_INFO.FW_Version>>8);//æ¬¡ç‰ˆæœ¬å·ï¼Œä¸¤å­—èŠ‚
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[3] = (u8)(DEVICE_INFO.FW_Version>>0);
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[4] = (u8)(DEVICE_INFO.FW_TYPE.bits.FW_type>>16);
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[5] = (u8)(DEVICE_INFO.FW_TYPE.bits.FW_type>>8);
@@ -134,16 +135,16 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 			CAN_Tx_Msg(&TxMessage);
 		}
 	}
-	//cmd_list.read,¶ÁÈ¡flashÊı¾İ,
-	//¸ÃÃüÁîÊÇÓÃÓÚ¶ÁÈ¡ÄÚ²¿´æ´¢Æ÷Êı¾İ
-	//¸ÃÃüÁîÔÚBootloaderºÍAPP³ÌĞòÖĞ¹ú±ØĞëÊµÏÖ
+	//cmd_list.read,è¯»å–flashæ•°æ®,
+	//è¯¥å‘½ä»¤æ˜¯ç”¨äºè¯»å–å†…éƒ¨å­˜å‚¨å™¨æ•°æ®
+	//è¯¥å‘½ä»¤åœ¨Bootloaderå’ŒAPPç¨‹åºä¸­å›½å¿…é¡»å®ç°
 	if(can_cmd == cmd_list.Read)
 	{
 		if(pRxMessage->DLC != 8)
 		{
 			TxMessage.DLC                              = 0x02;
 			TxMessage.ExtId.bit.ExtId                  = (DEVICE_INFO.Device_addr.bits.Device_addr<<CMD_WIDTH)|cmd_list.CmdFaild;
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = (u8)cmd_list.Read;//Ö÷°æ±¾ºÅ£¬Á½×Ö½Ú
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = (u8)cmd_list.Read;//ä¸»ç‰ˆæœ¬å·ï¼Œä¸¤å­—èŠ‚
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[1] = (u8)MSG_DATA_LEN_ERROR;
 			CAN_Tx_Msg(&TxMessage);
 			return;
@@ -160,13 +161,13 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 		{
 			TxMessage.DLC                              = 0x02;
 			TxMessage.ExtId.bit.ExtId                  = (DEVICE_INFO.Device_addr.bits.Device_addr<<CMD_WIDTH)|cmd_list.CmdFaild;
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = (u8)cmd_list.Read;//Ö÷°æ±¾ºÅ£¬Á½×Ö½Ú
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = (u8)cmd_list.Read;//ä¸»ç‰ˆæœ¬å·ï¼Œä¸¤å­—èŠ‚
 			TxMessage.CAN_Tx_msg_data.msg_byte.data[1] = (u8)READ_LEN_ERROR;
 			CAN_Tx_Msg(&TxMessage);
 			return;
 		}
 		u16 read_len_temp  = 0;
-		if(read_len%2 == 0)//ÒòÎªÃ¿´ÎÖ»ÄÜ¶ÁÈ¡N¸ö×Ö
+		if(read_len%2 == 0)//å› ä¸ºæ¯æ¬¡åªèƒ½è¯»å–Nä¸ªå­—
 		{
 			read_len_temp = read_len;
 		}
@@ -215,10 +216,13 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 		data_index = 0;
 		return;
 	}
-	//CMD_List.Excute£¬¿ØÖÆ³ÌĞòÌø×ªµ½Ö¸¶¨µØÖ·Ö´ĞĞ
-	//¸ÃÃüÁîÔÚBootloaderºÍAPP³ÌĞòÖĞ¶¼±ØĞëÊµÏÖ
-	if(can_cmd == cmd_list.Excute)//¸ÃÃüÁîÔÚDSPÖĞÒÑ¾­ÊµÏÖ
+	//CMD_List.Excuteï¼Œæ§åˆ¶ç¨‹åºè·³è½¬åˆ°æŒ‡å®šåœ°å€æ‰§è¡Œ
+	//è¯¥å‘½ä»¤åœ¨Bootloaderå’ŒAPPç¨‹åºä¸­éƒ½å¿…é¡»å®ç°
+	if(can_cmd == cmd_list.Excute)//è¯¥å‘½ä»¤åœ¨DSPä¸­å·²ç»å®ç°
 	{
+		__set_PRIMASK(1);
+		Flash_WR(APP_INFO_ADDR,app_check,2);
+		__set_PRIMASK(0);
 		exe_type = (((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[0])&0xFFFFFFFF)<<0x10)|\
 				   (((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[1])&0x00FFFFFF)<<0x08)|\
 				   (((u32)(pRxMessage->CAN_Rx_msg_data.msg_byte.data[2])&0x0000FFFF)<<0x00);
