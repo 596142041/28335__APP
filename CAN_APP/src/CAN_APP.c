@@ -31,9 +31,12 @@ Boot_CMD_LIST cmd_list =
 };
 Device_INFO DEVICE_INFO =
 {
- .FW_Version                    = 0x0011001,
- .Device_addr.bits.Device_addr  = DEVICE_ADDR,
+ .FW_Version.bits.Version       = 02,
+ .FW_Version.bits.date          = 01,
+ .FW_Version.bits.month         = 3,
+ .FW_Version.bits.year          = 2018,
  .Device_addr.bits.reserve      = 0x00,
+ .Device_addr.bits.Device_addr  = DEVICE_ADDR,
  .FW_TYPE.bits.FW_type          = CAN_BL_APP,
  .FW_TYPE.bits.Chip_Value       = TMS320F28335
 };
@@ -124,14 +127,14 @@ void CAN_BOOT_ExecutiveCommand(CanRxMsg *pRxMessage)
 		{
 			TxMessage.DLC                              = 8;
 			TxMessage.ExtId.bit.ExtId                  = (DEVICE_INFO.Device_addr.bits.Device_addr<<CMD_WIDTH)|cmd_list.CmdSuccess;
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = (u8)(DEVICE_INFO.FW_Version>>24);;//主版本号，两字节
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[1] = (u8)(DEVICE_INFO.FW_Version>>16);
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[2] = (u8)(DEVICE_INFO.FW_Version>>8);//次版本号，两字节
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[3] = (u8)(DEVICE_INFO.FW_Version>>0);
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[4] = (u8)(DEVICE_INFO.FW_TYPE.bits.FW_type>>16);
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[5] = (u8)(DEVICE_INFO.FW_TYPE.bits.FW_type>>8);
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[6] = (u8)(DEVICE_INFO.FW_TYPE.bits.FW_type>>0);
-			TxMessage.CAN_Tx_msg_data.msg_byte.data[7] = (u8)(DEVICE_INFO.FW_TYPE.bits.Chip_Value>>0);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[0] = (u8)((DEVICE_INFO.FW_Version.all>>0x18)&0xFF);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[1] = (u8)((DEVICE_INFO.FW_Version.all>>0x10)&0xFF);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[2] = (u8)((DEVICE_INFO.FW_Version.all>>0x08)&0xFF);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[3] = (u8)((DEVICE_INFO.FW_Version.all>>0x00)&0xFF);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[4] = (u8)((DEVICE_INFO.FW_TYPE.bits.FW_type>>0x10)&0xFF);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[5] = (u8)((DEVICE_INFO.FW_TYPE.bits.FW_type>>0x08)&0xFF);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[6] = (u8)((DEVICE_INFO.FW_TYPE.bits.FW_type>>0x00)&0xFF);
+			TxMessage.CAN_Tx_msg_data.msg_byte.data[7] = (u8)((DEVICE_INFO.FW_TYPE.bits.Chip_Value>>0)&0xFF);
 			CAN_Tx_Msg(&TxMessage);
 		}
 	}

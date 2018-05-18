@@ -56,8 +56,17 @@ typedef struct _Device_INFO
 			unsigned long int Chip_Value:8;
 		}bits;
 	}FW_TYPE;
-	//unsigned long int FW_TYPE;//固件类型
-	unsigned long int FW_Version;//固件版本
+	union
+	{
+		unsigned long  int all;
+		struct
+		{
+			unsigned long  int Version:	7;//固件版本
+			unsigned long  int date:	5;//日期
+			unsigned long  int month:	4;//月
+			unsigned long  int year:	16;//年
+		}bits;
+	}FW_Version;//固件版本
 }Device_INFO;
 typedef struct _bootloader_data
 {
