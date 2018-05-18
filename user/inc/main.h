@@ -1,7 +1,7 @@
 /*
  * main.h
  *
- *  Created on: 2017Äê4ÔÂ16ÈÕ
+ *  Created on: 2017ï¿½ï¿½4ï¿½ï¿½16ï¿½ï¿½
  *      Author: admin
  */
 
@@ -13,6 +13,5 @@
 #include "delay.h"
 #include "stdint.h"
 #include "Flash2833x_API_Library.h"
-//--------------------------------
 #include "flash.h"
 #endif /* USER_INC_MAIN_H_ */
