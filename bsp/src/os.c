@@ -1,7 +1,7 @@
 #ifndef _OS_C
 #define _OS_C
 #include "os.h"
-// ÅäÖÃÏÂÁÐº¯ÊýÔÚRAMÔËÐÐ
+// é…ç½®ä¸‹åˆ—å‡½æ•°åœ¨RAMè¿è¡Œ
 #pragma CODE_SECTION(taskclock, 		"ramfuncs");
 
 void taskinit(void)
@@ -13,13 +13,13 @@ void taskinit(void)
 		tasktimer[i].flag = 0;
 		tasktimer[i].enable = OS_DISABLE;
 	}
-	tasktimer[0].period=TASK500US_CYCLE;
-	tasktimer[1].period=TASK1MS_CYCLE;
-	tasktimer[2].period=TASK1300US_CYCLE;
-	tasktimer[3].period=TASK2MS_CYCLE;
-	tasktimer[4].period=TASK5MS_CYCLE;
-	tasktimer[5].period=TASK10MS_CYCLE;
-	tasktimer[6].period=TASK20MS_CYCLE;
+	tasktimer[0].period=TASK500US_CYCLE;//5
+	tasktimer[1].period=TASK1MS_CYCLE;//10
+	tasktimer[2].period=TASK1300US_CYCLE;//13
+	tasktimer[3].period=TASK2MS_CYCLE;//20
+	tasktimer[4].period=TASK5MS_CYCLE;//50
+	tasktimer[5].period=TASK10MS_CYCLE;//100
+	tasktimer[6].period=TASK20MS_CYCLE;//200
 	tasktimer[7].period=TASK50MS_CYCLE;
 	tasktimer[8].period=TASK100MS_CYCLE;
 	tasktimer[9].period=TASK1000MS_CYCLE;
@@ -46,7 +46,6 @@ void taskclock(void)
 			if(tasktimer[i].flag>MaxUnfinishedNum)
 			{
 				tasktimer[i].flag=0;
-				//error
 			}
 		}
 	}
@@ -54,7 +53,7 @@ void taskclock(void)
 
 void taskdelayctrl(void)
 {
-	if((tasktimer[0].cnt == TIME_CONST_200US)&&(tasktimer[1].enable == OS_DISABLE))//500USµÄ¶¨Ê±ÑÓ³Ù100usÖ´ÐÐ
+	if((tasktimer[0].cnt == TIME_CONST_200US)&&(tasktimer[1].enable == OS_DISABLE))//500USçš„å®šæ—¶å»¶è¿Ÿ100usæ‰§è¡Œ
 	{
 		tasktimer[1].enable=OS_ENABLE;
 	}
