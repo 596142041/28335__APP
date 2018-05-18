@@ -1,7 +1,7 @@
 /*******************************************************
  * file_name  : timer.c
  * DIR:/28335_APP/bsp/src/timer.c
- * Created on : 2017Äê8ÔÂ11ÈÕ-ÏÂÎç10:21:59
+ * Created on : 2017å¹´8æœˆ11æ—¥-ä¸‹åˆ10:21:59
  * Author     : admin
  * Version    :
  *
@@ -26,5 +26,5 @@ __interrupt void CPU_timer1_isr(void)
 		CpuTimer1.InterruptCount = 0;
 		 GpioDataRegs.GPBTOGGLE.bit.GPIO34 = 1;
 	}
-	CpuTimer1Regs.TCR.bit.TIF  = 0x01;//Çå³ıÖĞ¶Ï±êÖ¾Î»
+	CpuTimer1Regs.TCR.bit.TIF  = 0x01;//æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
 }
