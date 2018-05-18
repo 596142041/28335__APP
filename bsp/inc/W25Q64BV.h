@@ -39,8 +39,8 @@
 #define W25Q64_MOSI_Pin GPIO_Pin_5
 #define W25Q64_MISO_Pin GPIO_Pin_4
 #define W25Q64_SPI_GPIO_RCC  RCC_AHB1Periph_GPIOB
-#define W25Q64_CS_CLR
-#define W25Q64_CS_SET
+#define W25Q64_CS_CLR GpioDataRegs.GPACLEAR.bit.GPIO0 = 1
+#define W25Q64_CS_SET  GpioDataRegs.GPACLEAR.bit.GPIO0 = 1
 //常用SPI Flash ID
 enum
 {
