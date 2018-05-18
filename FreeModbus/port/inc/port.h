@@ -36,8 +36,8 @@ typedef long int LONG;
 #endif
 void INTX_DISABLE(void);
 void  INTX_ENABLE(void);
-__interrupt void serial_Rx_isr(void);
-__interrupt void serial_Tx_isr(void);
+__interrupt void SCIC_Rx_isr(void);
+__interrupt void SCIC_Tx_isr(void);
 __interrupt void cpu_timer2_isr(void);
 
 //输入寄存器相关参数

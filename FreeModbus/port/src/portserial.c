@@ -123,7 +123,7 @@ BOOL xMBPortSerialGetByte( CHAR * pucByte )
 *
 * @Return : none
 *******************************************************************************/
-__interrupt void serial_Rx_isr(void)
+__interrupt void SCIC_Rx_isr(void)
 {
 	if(ScicRegs.SCIFFRX.bit.RXFFINT == 1)
 	{
@@ -133,7 +133,7 @@ __interrupt void serial_Rx_isr(void)
 	}
 	PieCtrlRegs.PIEACK.bit.ACK8 =1;
 }
-__interrupt void serial_Tx_isr(void)
+__interrupt void SCIC_Tx_isr(void)
 {
 	if(ScicRegs.SCIFFTX.bit.TXFFINT == 1)
 	{
